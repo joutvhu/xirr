@@ -6,7 +6,7 @@ public class Xirr {
     private final double accurate;
     private final double tries;
 
-    public Xirr() {
+    private Xirr() {
         accurate = 0.000001;
         tries = 100;
     }
@@ -37,14 +37,16 @@ public class Xirr {
         return xirr(newtonsXirr, 0.1);
     }
 
+    public double xirr(Transaction[] transactions, double guess) {
+        NewtonsXirr newtonsXirr = new NewtonsXirr(transactions);
+        return xirr(newtonsXirr, guess);
+    }
+
     public double xirr(double[] payments, double[] days) {
         return xirr(payments, days, 0.1);
     }
 
     public double xirr(double[] payments, double[] days, double guess) {
-        if (payments.length != days.length) {
-            throw new XirrException("Payments and Days must have the same number of elements.");
-        }
         NewtonsXirr newtonsXirr = new NewtonsXirr(payments, days);
         return xirr(newtonsXirr, guess);
     }
