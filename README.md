@@ -53,7 +53,7 @@ The arguments of the `xirr` function:
 - `values`       __required__. A series of cash flows that corresponds to a schedule of payments in dates. The first payment is optional and corresponds to a cost or payment that occurs at the beginning of the investment. If the first value is a cost or payment, it must be a negative value. All succeeding payments are discounted based on a 365-day year. The series of values must contain at least one positive and one negative value.
 - `days`         __required__. A schedule of payment dates that corresponds to the cash flow payments. Dates may occur in any order.
 - `transactions` __required__. A series of pairs of `value` and `day`.
-- `guess`        __optional__. A number that you guess is close to the result of XIRR.
+- `guess`        __optional__. A number that you guess is close to the result of Xirr. If omitted, guess is assumed to be 0.1 (10 percent).
 
 ```java
 // rate ~ 0.35899244 ~ 35.90%
