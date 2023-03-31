@@ -9,8 +9,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class Transaction {
     private static final LocalDate DAY0 = LocalDate.of(1900, 1, 1);
 
-    final double amount;
-    final double when;
+    private final double amount;
+    private final double when;
 
     public Transaction(double amount, double when) {
         this.amount = amount;
@@ -18,8 +18,7 @@ public class Transaction {
     }
 
     public Transaction(double amount, LocalDate when) {
-        this.amount = amount;
-        this.when = DAYS.between(DAY0, when);
+        this(amount, DAYS.between(DAY0, when));
     }
 
     public Transaction(double amount, Date when) {

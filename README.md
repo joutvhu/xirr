@@ -7,7 +7,7 @@ To calculate the internal rate of return for a schedule of cash flows that is no
 - If you are using Gradle just add the following dependency to your `build.gradle`.
 
 ```groovy
-implementation "com.github.joutvhu:xirr:1.0.3"
+implementation "com.github.joutvhu:xirr:1.0.4"
 ```
 
 - Or add the following dependency to your `pom.xml` if you are using Maven.
@@ -16,7 +16,7 @@ implementation "com.github.joutvhu:xirr:1.0.3"
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>xirr</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -31,10 +31,10 @@ If Xirr can't find a result that works after 100 tries, you'll get a `XirrExcept
 You can also change the accuracy and tries using the `Xirr.of(double accurate, double tries)` method.
 
 ```java
-// Xirr.instance() -> accurate = 0.000001, tries = 100;
+// Xirr.instance() -> precision = 0.000001, tries = 100;
 Xirr xirr = Xirr.instance();
 
-// Xirr.of(double accurate, double tries);
+// Xirr.of(double precision, double tries);
 Xirr xirr1 = Xirr.of(0.000001, 1000);
 ```
 

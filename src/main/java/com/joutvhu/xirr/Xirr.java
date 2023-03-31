@@ -3,20 +3,20 @@ package com.joutvhu.xirr;
 import java.text.MessageFormat;
 
 public class Xirr {
-    private final double accurate;
-    private final double tries;
+    public final double precision;
+    public final double tries;
 
     private Xirr() {
-        accurate = 0.000001;
+        precision = 0.000001;
         tries = 100;
     }
 
-    private Xirr(double accurate, double tries) {
-        if (accurate <= 0)
-            throw new XirrException("The accurate must be greater than 0.");
+    private Xirr(double precision, double tries) {
+        if (precision <= 0)
+            throw new XirrException("The precision must be greater than 0.");
         if (tries <= 0)
             throw new XirrException("The tries must be greater than 0.");
-        this.accurate = accurate;
+        this.precision = precision;
         this.tries = tries;
     }
 
@@ -24,16 +24,8 @@ public class Xirr {
         return new Xirr();
     }
 
-    public static Xirr of(double accurate, double tries) {
-        return new Xirr(accurate, tries);
-    }
-
-    public double getAccurate() {
-        return accurate;
-    }
-
-    public double getTries() {
-        return tries;
+    public static Xirr of(double precision, double tries) {
+        return new Xirr(precision, tries);
     }
 
     public double xirr(Transaction... transactions) {
@@ -59,7 +51,7 @@ public class Xirr {
         double x0 = guess;
         double err = 1e+100;
 
-        for (int i = 0; err > accurate; i++) {
+        for (int i = 0; err > precision; i++) {
             if (i >= tries) {
                 String message = MessageFormat.format("Not accurate enough after {0} tries, rate: {1}, error: {2}", i, x0, err);
                 throw new XirrException(message, x0, err);

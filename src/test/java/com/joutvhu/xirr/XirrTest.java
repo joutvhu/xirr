@@ -45,7 +45,7 @@ public class XirrTest {
                 new Transaction(105576.87, "2022-12-31"),
                 new Transaction(-20.352, "2022-12-31")
         );
-        Assertions.assertTrue(Math.abs(248.9207718 - rate) < xirr.getAccurate());
+        Assertions.assertTrue(Math.abs(248.9207718 - rate) < xirr.precision);
     }
 
     @Test
@@ -58,6 +58,6 @@ public class XirrTest {
                 new Transaction(3250, "2009-02-15"),
                 new Transaction(2750, "2009-04-01")
         );
-        Assertions.assertTrue(Math.abs(0.35899244 - rate) < xirr.getAccurate());
+        Assertions.assertTrue(Math.abs(0.35899244 - rate) < xirr.precision);
     }
 }
