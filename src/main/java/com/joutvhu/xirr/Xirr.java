@@ -12,6 +12,10 @@ public class Xirr {
     }
 
     private Xirr(double accurate, double tries) {
+        if (accurate <= 0)
+            throw new XirrException("The accurate must be greater than 0.");
+        if (tries <= 0)
+            throw new XirrException("The tries must be greater than 0.");
         this.accurate = accurate;
         this.tries = tries;
     }
@@ -42,30 +46,27 @@ public class Xirr {
         return xirr(newtonsXirr, guess);
     }
 
-    public double xirr(double[] payments, double[] days) {
-        return xirr(payments, days, 0.1);
+    public double xirr(double[] values, double[] days) {
+        return xirr(values, days, 0.1);
     }
 
-    public double xirr(double[] payments, double[] days, double guess) {
-        NewtonsXirr newtonsXirr = new NewtonsXirr(payments, days);
+    public double xirr(double[] values, double[] days, double guess) {
+        NewtonsXirr newtonsXirr = new NewtonsXirr(values, days);
         return xirr(newtonsXirr, guess);
     }
 
     public double xirr(NewtonsXirr newtonsXirr, double guess) {
         double x0 = guess;
-        double x1;
         double err = 1e+100;
-        int time = 0;
 
-        while (err > accurate) {
-            if (time >= tries) {
-                String message = MessageFormat.format("Not accurate enough after {0} tries, rate: {1}, error: {2}", time, x0, err);
+        for (int i = 0; err > accurate; i++) {
+            if (i >= tries) {
+                String message = MessageFormat.format("Not accurate enough after {0} tries, rate: {1}, error: {2}", i, x0, err);
                 throw new XirrException(message, x0, err);
             }
-            x1 = newtonsXirr.next(x0);
+            double x1 = newtonsXirr.next(x0);
             err = Math.abs(x1 - x0);
             x0 = x1;
-            time++;
         }
 
         return x0;

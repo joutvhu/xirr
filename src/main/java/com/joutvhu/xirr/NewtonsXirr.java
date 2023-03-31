@@ -1,81 +1,59 @@
 package com.joutvhu.xirr;
 
-class NewtonsXirr {
-    private XirrFx f;
-    private XirrFx df;
+public class NewtonsXirr {
+    private static final double f = 1.0 / 365.0;
+
+    private double[] values;
+    private double[] days;
 
     public NewtonsXirr(Transaction[] transactions) {
-        double[] payments = new double[transactions.length];
-        double[] days = new double[transactions.length];
-        boolean positive = false;
-        boolean negative = false;
-        for (int i = 0; i < payments.length; i++) {
+        this.values = new double[transactions.length];
+        this.days = new double[transactions.length];
+        for (int i = 0; i < values.length; i++) {
             Transaction transaction = transactions[i];
-            payments[i] = transaction.getAmount();
+            values[i] = transaction.getAmount();
             days[i] = transaction.getWhen();
-            if (payments[i] > 0)
-                positive = true;
-            if (payments[i] < 0)
-                negative = true;
         }
-        validate(positive, negative);
-        this.f = fTotalXirr(payments, days);
-        this.df = dfTotalXirr(payments, days);
+        validate();
     }
 
-    public NewtonsXirr(double[] payments, double[] days) {
-        if (payments.length != days.length) {
-            throw new XirrException("Payments and Days must have the same number of elements.");
-        }
+    public NewtonsXirr(double[] values, double[] days) {
+        if (values.length != days.length)
+            throw new XirrException("Values and Days must be the same length.");
+        this.values = values;
+        this.days = days;
+        validate();
+    }
+
+    private void validate() {
         boolean positive = false;
         boolean negative = false;
-        for (double payment : payments) {
-            if (payment > 0)
+        for (double value : values) {
+            if (value > 0)
                 positive = true;
-            if (payment < 0)
+            if (value < 0)
                 negative = true;
             if (positive && negative)
                 break;
         }
-        validate(positive, negative);
-        this.f = fTotalXirr(payments, days);
-        this.df = dfTotalXirr(payments, days);
-    }
-
-    private static void validate(boolean positive, boolean negative) {
-        if (!positive && !negative) {
+        if (!positive && !negative)
             throw new XirrException("Expects at least one positive cash flow and one negative cash flow.");
-        }
-        if (!positive) {
+        if (!positive)
             throw new XirrException("Expects at least one positive cash flow.");
-        }
-        if (!negative) {
+        if (!negative)
             throw new XirrException("Expects at least one negative cash flow.");
-        }
-    }
-
-    public static XirrFx fTotalXirr(double[] payments, double[] days) {
-        return x -> {
-            double rate = 0.0;
-            for (int i = 0; i < payments.length; i++) {
-                rate += payments[i] * Math.pow((1.0 + x), ((days[0] - days[i]) / 365.0));
-            }
-            return rate;
-        };
-    }
-
-    public static XirrFx dfTotalXirr(double[] payments, double[] days) {
-        return x -> {
-            double rate = 0.0;
-            for (int i = 0; i < payments.length; i++) {
-                rate += (1.0 / 365.0) * (days[0] - days[i]) *
-                        payments[i] * Math.pow((x + 1.0), (((days[0] - days[i]) / 365.0) - 1.0));
-            }
-            return rate;
-        };
     }
 
     public double next(double x) {
-        return x - f.calculate(x) / df.calculate(x);
+        double fr = 0.0;
+        double dfr = 0.0;
+        double r = 1.0 + x;
+        for (int i = 0; i < values.length; i++) {
+            double d = days[0] - days[i];
+            double p = d / 365.0;
+            fr += values[i] * Math.pow(r, p);
+            dfr += f * d * values[i] * Math.pow(r, p - 1.0);
+        }
+        return x - fr / dfr;
     }
 }
