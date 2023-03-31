@@ -1,8 +1,6 @@
 package com.joutvhu.xirr;
 
 public class NewtonsXirr {
-    private static final double f = 1.0 / 365.0;
-
     private double[] values;
     private double[] days;
 
@@ -52,7 +50,7 @@ public class NewtonsXirr {
             double d = days[0] - days[i];
             double p = d / 365.0;
             fr += values[i] * Math.pow(r, p);
-            dfr += f * d * values[i] * Math.pow(r, p - 1.0);
+            dfr += p * values[i] * Math.pow(r, p - 1.0);
         }
         return x - fr / dfr;
     }
