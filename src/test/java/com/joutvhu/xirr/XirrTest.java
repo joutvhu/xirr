@@ -4,10 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class XirrTest {
-    private Xirr xirr = Xirr.instance();
-
     @Test
-    public void test() {
+    public void test1() {
+        Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
                 new Transaction(23, "2011-07-11"),
                 new Transaction(441.24, "2012-02-28"),
@@ -47,5 +46,18 @@ public class XirrTest {
                 new Transaction(-20.352, "2022-12-31")
         );
         Assertions.assertTrue(Math.abs(248.9207718 - rate) < xirr.getAccurate());
+    }
+
+    @Test
+    public void test2() {
+        Xirr xirr = Xirr.of(0.000001, 1000);
+        double rate = xirr.xirr(
+                new Transaction(-10000, "2008-01-01"),
+                new Transaction(2750, "2008-03-01"),
+                new Transaction(4250, "2008-11-30"),
+                new Transaction(3250, "2009-02-15"),
+                new Transaction(2750, "2009-04-01")
+        );
+        Assertions.assertTrue(Math.abs(0.35899244 - rate) < xirr.getAccurate());
     }
 }
