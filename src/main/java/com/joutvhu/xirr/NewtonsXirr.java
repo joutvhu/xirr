@@ -48,9 +48,10 @@ public class NewtonsXirr {
         double r = 1.0 + x;
         for (int i = 0; i < values.length; i++) {
             double p = (days[0] - days[i]) / 365.0;
-            fr += values[i] * Math.pow(r, p);
-            dfr += p * values[i] * Math.pow(r, p - 1.0);
+            double v = values[i] * Math.pow(r, p);
+            fr += v;
+            dfr += p * v;
         }
-        return x - fr / dfr;
+        return x - r * fr / dfr;
     }
 }
