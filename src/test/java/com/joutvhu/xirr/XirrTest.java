@@ -5,6 +5,50 @@ import org.junit.jupiter.api.Test;
 
 public class XirrTest {
     @Test
+    public void test() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(
+                new Transaction(7500000, "2011-07-11"),
+                new Transaction(12375001, "2012-02-28"),
+                new Transaction(2625001, "2012-05-14"),
+                new Transaction(375001, "2012-11-02"),
+                new Transaction(-500000, "2012-12-31"),
+                new Transaction(1125001, "2013-04-01"),
+                new Transaction(-225001, "2013-04-30"),
+                new Transaction(-250000, "2013-08-15"),
+                new Transaction(-3000000, "2013-08-30"),
+                new Transaction(-250000, "2013-10-25"),
+                new Transaction(-1999999, "2014-04-14"),
+                new Transaction(999996, "2014-04-30"),
+                new Transaction(-999996, "2014-04-30"),
+                new Transaction(-500001, "2014-05-13"),
+                new Transaction(-249999, "2014-09-26"),
+                new Transaction(-40893, "2014-12-31"),
+                new Transaction(-749997, "2015-04-30"),
+                new Transaction(-1249999, "2015-06-23"),
+                new Transaction(-3000000, "2015-10-15"),
+                new Transaction(-30520, "2015-12-31"),
+                new Transaction(-14499332, "2016-05-27"),
+                new Transaction(-31065, "2016-12-31"),
+                new Transaction(-700000, "2017-06-16"),
+                new Transaction(-450000, "2017-09-28"),
+                new Transaction(-35938, "2017-12-31"),
+                new Transaction(534742, "2018-12-14"),
+                new Transaction(-10131000, "2018-12-14"),
+                new Transaction(-15392, "2018-12-31"),
+                new Transaction(-3051107, "2019-06-28"),
+                new Transaction(-2860143, "2019-09-04"),
+                new Transaction(-365000, "2019-12-27"),
+                new Transaction(-777788, "2020-06-30"),
+                new Transaction(-218118, "2021-01-20"),
+                new Transaction(-633348, "2022-02-03"),
+                new Transaction(1038676, "2022-12-31"),
+                new Transaction(-207732, "2022-12-31")
+        );
+        Assertions.assertTrue(Math.abs(0.139126295 - rate) < xirr.precision);
+    }
+
+    @Test
     public void test1() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -50,7 +94,7 @@ public class XirrTest {
 
     @Test
     public void test2() {
-        Xirr xirr = Xirr.of(0.000001, 1000);
+        Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
                 new Transaction(-10000, "2008-01-01"),
                 new Transaction(2750, "2008-03-01"),
@@ -59,5 +103,18 @@ public class XirrTest {
                 new Transaction(2750, "2009-04-01")
         );
         Assertions.assertTrue(Math.abs(0.35899244 - rate) < xirr.precision);
+    }
+
+    @Test
+    public void test3() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(
+//            new Transaction(-6565763.49, "2018-10-02"),
+            new Transaction(-6565763.49, "2018-10-02"),
+//            new Transaction( -91577.34, "2018-10-02"),
+            new Transaction(317505.63, "2023-09-30"),
+            new Transaction( 4428.48, "2023-09-30")
+        );
+        Assertions.assertTrue(Math.abs(0.454557475 - rate) < xirr.precision);
     }
 }

@@ -44,9 +44,9 @@ The Syntax of the `xirr` function:
 
 - `Xirr.xirr(Transaction[] transactions, double guess)`
 
-- `Xirr.xirr(double[] values, double[] days)`
+- `Xirr.xirr(double[] values, long[] days)`
 
-- `Xirr.xirr(double[] values, double[] days, double guess)`
+- `Xirr.xirr(double[] values, long[] days, double guess)`
 
 The arguments of the `xirr` function:
 

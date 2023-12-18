@@ -10,9 +10,9 @@ public class Transaction {
     private static final LocalDate DAY0 = LocalDate.of(1900, 1, 1);
 
     private final double amount;
-    private final double when;
+    private final long when;
 
-    public Transaction(double amount, double when) {
+    public Transaction(double amount, long when) {
         this.amount = amount;
         this.when = when;
     }
@@ -33,7 +33,7 @@ public class Transaction {
         return amount;
     }
 
-    public double getWhen() {
+    public long getWhen() {
         return when;
     }
 }

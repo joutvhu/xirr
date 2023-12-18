@@ -38,11 +38,11 @@ public class Xirr {
         return xirr(newtonsXirr, guess);
     }
 
-    public double xirr(double[] values, double[] days) {
+    public double xirr(double[] values, long[] days) {
         return xirr(values, days, 0.1);
     }
 
-    public double xirr(double[] values, double[] days, double guess) {
+    public double xirr(double[] values, long[] days, double guess) {
         NewtonsXirr newtonsXirr = new NewtonsXirr(values, days);
         return xirr(newtonsXirr, guess);
     }
