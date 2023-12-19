@@ -62,6 +62,8 @@ public class NewtonsXirr {
         double fr = 0.0;
         double dfr = 0.0;
         double r = 1.0 + x;
+        if (r == 0)
+            return x;
         for (int i = 0; i < values.length; i++) {
             long d = days[0] - days[i];
             double p = d / 365.0;
