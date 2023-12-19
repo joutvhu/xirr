@@ -7,7 +7,7 @@ To calculate the internal rate of return for a schedule of cash flows that is no
 - If you are using Gradle just add the following dependency to your `build.gradle`.
 
 ```groovy
-implementation "com.github.joutvhu:xirr:1.0.4"
+implementation "com.github.joutvhu:xirr:1.0.5"
 ```
 
 - Or add the following dependency to your `pom.xml` if you are using Maven.
@@ -16,7 +16,7 @@ implementation "com.github.joutvhu:xirr:1.0.4"
 <dependency>
     <groupId>com.github.joutvhu</groupId>
     <artifactId>xirr</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 

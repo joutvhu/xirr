@@ -119,7 +119,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test030() {
+    public void test03_0() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -133,7 +133,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test031() {
+    public void test03_1() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -146,7 +146,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test032() {
+    public void test03_2() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(317505.63, "2018-10-02"),
@@ -159,7 +159,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test033() {
+    public void test03_3() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
