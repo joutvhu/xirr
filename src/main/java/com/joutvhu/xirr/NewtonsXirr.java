@@ -3,13 +3,15 @@ package com.joutvhu.xirr;
 public class NewtonsXirr {
     private static final double DAYS_IN_YEAR = 365.0;
 
+    public final int length;
     private double[] values;
     private long[] days;
 
     public NewtonsXirr(Transaction[] transactions) {
-        this.values = new double[transactions.length];
-        this.days = new long[transactions.length];
-        for (int i = 0; i < values.length; i++) {
+        this.length = transactions.length;
+        this.values = new double[length];
+        this.days = new long[length];
+        for (int i = 0; i < length; i++) {
             Transaction transaction = transactions[i];
             values[i] = transaction.getAmount();
             days[i] = transaction.getWhen();
@@ -20,6 +22,7 @@ public class NewtonsXirr {
     public NewtonsXirr(double[] values, long[] days) {
         if (values.length != days.length)
             throw new XirrException("Values and Days must be the same length.");
+        this.length = values.length;
         this.values = values;
         this.days = days;
         validate();
@@ -65,7 +68,7 @@ public class NewtonsXirr {
     }
 
     public double next(double x, int index) {
-        if (index < 0) index = days.length + index;
+        if (index < 0) index = length + index;
         return next(days[index], x);
     }
 
@@ -75,7 +78,7 @@ public class NewtonsXirr {
         double r = 1.0 + x;
         if (r == 0)
             return x;
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < length; i++) {
             long d = d0 - days[i];
             double p = d / DAYS_IN_YEAR;
             double v = values[i] * pow(r, d);

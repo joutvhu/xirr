@@ -75,4 +75,17 @@ public class Xirr {
 
         return x0;
     }
+
+    public double tryXirr(NewtonsXirr newtonsXirr, double guess) {
+        for (int i = 0; i < newtonsXirr.length; i++) {
+            try {
+                return xirr(newtonsXirr, guess, i);
+            } catch (XirrException.ValueException e) {
+                if (i + 1 >= newtonsXirr.length) {
+                    throw e.toXirrException();
+                }
+            }
+        }
+        return 0.0;
+    }
 }
