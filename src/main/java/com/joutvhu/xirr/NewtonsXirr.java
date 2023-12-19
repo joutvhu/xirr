@@ -1,6 +1,8 @@
 package com.joutvhu.xirr;
 
 public class NewtonsXirr {
+    private static final double DAYS_IN_YEAR = 365.0;
+
     private double[] values;
     private long[] days;
 
@@ -51,10 +53,10 @@ public class NewtonsXirr {
             // Ex: (-5)^(50/365) = (-1)^(50/365) * (5)^(50/365)
             //                   = ((-1)^(1/365))^(50) * (5)^(50/365)
             //                   = (-1)^(50) * (5)^(50/365)
-            double v = Math.pow(Math.abs(value), days / 365.0);
+            double v = Math.pow(Math.abs(value), days / DAYS_IN_YEAR);
             return Math.abs(days) % 2 == 0 ? v : -1 * v;
         } else {
-            return Math.pow(value, days / 365.0);
+            return Math.pow(value, days / DAYS_IN_YEAR);
         }
     }
 
@@ -75,7 +77,7 @@ public class NewtonsXirr {
             return x;
         for (int i = 0; i < values.length; i++) {
             long d = d0 - days[i];
-            double p = d / 365.0;
+            double p = d / DAYS_IN_YEAR;
             double v = values[i] * pow(r, d);
             fr += v;
             dfr += p * v;
