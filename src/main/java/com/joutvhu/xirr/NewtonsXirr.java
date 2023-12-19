@@ -59,24 +59,33 @@ public class NewtonsXirr {
     }
 
     public double next(double x) {
+        return next(days[0], x);
+    }
+
+    public double next(double x, int index) {
+        if (index < 0) index = days.length + index;
+        return next(days[index], x);
+    }
+
+    public double next(long d0, double x) {
         double fr = 0.0;
         double dfr = 0.0;
         double r = 1.0 + x;
         if (r == 0)
             return x;
         for (int i = 0; i < values.length; i++) {
-            long d = days[0] - days[i];
+            long d = d0 - days[i];
             double p = d / 365.0;
             double v = values[i] * pow(r, d);
             fr += v;
             dfr += p * v;
         }
         if (!Double.isFinite(fr))
-            throw new XirrException("Function value overflow", fr);
+            throw new XirrException.ValueException("Function value overflow");
         if (!Double.isFinite(dfr))
-            throw new XirrException("Derivative value overflow", dfr);
+            throw new XirrException.ValueException("Derivative value overflow");
         if (dfr == 0.0)
-            throw new XirrException("Derivative value is zero", dfr);
+            throw new XirrException.ValueException("Derivative value is zero");
         return x - r * fr / dfr;
     }
 }

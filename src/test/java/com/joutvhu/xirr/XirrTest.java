@@ -119,6 +119,58 @@ public class XirrTest {
     }
 
     @Test
+    public void test030() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(new Transaction[]{
+                new Transaction(-6565763.49, "2018-10-02"),
+                new Transaction(-91577.34, "2018-10-02"),
+                new Transaction(77.34, "2021-10-02"),
+                new Transaction(317505.63, "2023-09-30"),
+                new Transaction(4428.48, "2023-09-30")
+            }, 0.1
+        );
+        Assertions.assertEquals(-0.454549675, rate, xirr.precision);
+    }
+
+    @Test
+    public void test031() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(new Transaction[]{
+                new Transaction(-6565763.49, "2018-10-02"),
+                new Transaction(91577.34, "2018-10-02"),
+                new Transaction(317505.63, "2023-09-30"),
+                new Transaction(4428.48, "2023-09-30")
+            }, 0.1
+        );
+        Assertions.assertEquals(-0.451504024, rate, xirr.precision);
+    }
+
+    @Test
+    public void test032() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(new Transaction[]{
+                new Transaction(317505.63, "2018-10-02"),
+                new Transaction(4428.48, "2018-10-02"),
+                new Transaction(-91577.34, "2023-09-30"),
+                new Transaction(-6565763.49, "2023-09-30")
+            }, 0.1
+        );
+        Assertions.assertEquals(0.833373749, rate, xirr.precision);
+    }
+
+    @Test
+    public void test033() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(new Transaction[]{
+                new Transaction(-6565763.49, "2018-10-02"),
+                new Transaction(317505.63, "2023-09-30"),
+                new Transaction(4428.48, "2023-09-30")
+            }, 0.1
+        );
+        Assertions.assertEquals(-0.453043529, rate, xirr.precision);
+    }
+
+    @Test
     public void test04() {
         // computes the xirr on 1 year growth of 0%
         Xirr xirr = Xirr.instance();

@@ -48,6 +48,18 @@ public class Xirr {
     }
 
     public double xirr(NewtonsXirr newtonsXirr, double guess) {
+        try {
+            return xirr(newtonsXirr, guess, 0);
+        } catch (XirrException.ValueException e) {
+            try {
+                return xirr(newtonsXirr, guess, -1);
+            } catch (Exception ex) {
+                throw e.toXirrException();
+            }
+        }
+    }
+
+    private double xirr(NewtonsXirr newtonsXirr, double guess, int index) {
         double x0 = guess;
         double err = 1e+100;
 
@@ -56,7 +68,7 @@ public class Xirr {
                 String message = MessageFormat.format("Not accurate enough after {0} tries, rate: {1}, error: {2}", i, x0, err);
                 throw new XirrException(message, x0, err);
             }
-            double x1 = newtonsXirr.next(x0);
+            double x1 = newtonsXirr.next(x0, index);
             err = Math.abs(x1 - x0);
             x0 = x1;
         }
