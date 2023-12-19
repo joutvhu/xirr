@@ -10,6 +10,11 @@ public class XirrException extends RuntimeException {
         this.value = value;
     }
 
+    public XirrException(String message, Double value) {
+        super(message);
+        this.value = value;
+    }
+
     public XirrException(String message) {
         super(message);
     }

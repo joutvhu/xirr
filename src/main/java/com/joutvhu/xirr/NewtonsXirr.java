@@ -43,9 +43,16 @@ public class NewtonsXirr {
     }
 
     private double pow(double value, long days) {
-        if (value < 0) {
+        if (value == 0) {
+            return 0;
+        } else if (days == 0) {
+            return 1;
+        } else if (value < 0) {
+            // Ex: (-5)^(50/365) = (-1)^(50/365) * (5)^(50/365)
+            //                   = ((-1)^(1/365))^(50) * (5)^(50/365)
+            //                   = (-1)^(50) * (5)^(50/365)
             double v = Math.pow(Math.abs(value), days / 365.0);
-            return Math.abs(days) % 2 == 0 ? -1 * v : v;
+            return Math.abs(days) % 2 == 0 ? v : -1 * v;
         } else {
             return Math.pow(value, days / 365.0);
         }
@@ -62,6 +69,12 @@ public class NewtonsXirr {
             fr += v;
             dfr += p * v;
         }
+        if (!Double.isFinite(fr))
+            throw new XirrException("Function value overflow", fr);
+        if (!Double.isFinite(dfr))
+            throw new XirrException("Derivative value overflow", dfr);
+        if (dfr == 0.0)
+            throw new XirrException("Derivative value is zero", dfr);
         return x - r * fr / dfr;
     }
 }
