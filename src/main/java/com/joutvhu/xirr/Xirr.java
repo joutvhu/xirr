@@ -5,10 +5,12 @@ import java.text.MessageFormat;
 public class Xirr {
     public final double precision;
     public final double tries;
+    public final double validate;
 
     private Xirr() {
-        precision = 0.000001;
-        tries = 100;
+        precision = 0.000_001;
+        tries = 500;
+        validate = 0.1;
     }
 
     private Xirr(double precision, double tries) {
@@ -18,6 +20,19 @@ public class Xirr {
             throw new XirrException("The tries must be greater than 0.");
         this.precision = precision;
         this.tries = tries;
+        this.validate = 0.1;
+    }
+
+    private Xirr(double precision, double tries, double validate) {
+        if (precision <= 0)
+            throw new XirrException("The precision must be greater than 0.");
+        if (tries <= 0)
+            throw new XirrException("The tries must be greater than 0.");
+        if (validate < 0)
+            throw new XirrException("The validate must be greater than or equal with 0.");
+        this.precision = precision;
+        this.tries = tries;
+        this.validate = validate;
     }
 
     public static Xirr instance() {
@@ -26,6 +41,10 @@ public class Xirr {
 
     public static Xirr of(double precision, double tries) {
         return new Xirr(precision, tries);
+    }
+
+    public static Xirr of(double precision, double tries, double validate) {
+        return new Xirr(precision, tries, validate);
     }
 
     public double xirr(Transaction... transactions) {
@@ -73,19 +92,13 @@ public class Xirr {
             x0 = x1;
         }
 
-        return x0;
-    }
-
-    public double tryXirr(NewtonsXirr newtonsXirr, double guess) {
-        for (int i = 0; i < newtonsXirr.length; i++) {
-            try {
-                return xirr(newtonsXirr, guess, i);
-            } catch (XirrException.ValueException e) {
-                if (i + 1 >= newtonsXirr.length) {
-                    throw e.toXirrException();
-                }
+        if (validate > 0) {
+            double dif = newtonsXirr.xnpv(x0, d0Index);
+            if (Math.abs(dif) > validate) {
+                String message = MessageFormat.format("The result {0} are not accurate enough, Xnpv: {1}", x0, dif);
+                throw new XirrException(message, x0, dif);
             }
         }
-        return 0.0;
+        return x0;
     }
 }

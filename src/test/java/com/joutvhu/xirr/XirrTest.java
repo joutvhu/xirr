@@ -3,9 +3,9 @@ package com.joutvhu.xirr;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class XirrTest {
+class XirrTest {
     @Test
-    public void test00() {
+    void test00() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(7500000, "2011-07-11"),
@@ -49,7 +49,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test01() {
+    void test01() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(23, "2011-07-11"),
@@ -93,7 +93,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test02() {
+    void test02() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(-10000, "2008-01-01"),
@@ -106,7 +106,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test03() {
+    void test03() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -119,7 +119,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test03_0() {
+    void test03_0() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -133,7 +133,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test03_1() {
+    void test03_1() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -146,7 +146,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test03_2() {
+    void test03_2() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(317505.63, "2018-10-02"),
@@ -159,7 +159,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test03_3() {
+    void test03_3() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -171,7 +171,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test04() {
+    void test04() {
         // computes the xirr on 1 year growth of 0%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -182,7 +182,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test05() {
+    void test05() {
         // computes the xirr on 1 year growth of 10%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -193,7 +193,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test06() {
+    void test06() {
         // computes the negative xirr on 1 year decline of 10%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -204,7 +204,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test07() {
+    void test07() {
         // computes the xirr on a particular data set the same as a popular
         // spreadsheet
         Xirr xirr = Xirr.instance();
@@ -219,7 +219,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test08() {
+    void test08() {
         // gets the same answer even if the transations are out of order
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -233,7 +233,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test09() {
+    void test09() {
         // computes rates of return greater than 100%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -244,7 +244,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test10() {
+    void test10() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(-1000, "2016-01-15"),
@@ -256,7 +256,7 @@ public class XirrTest {
     }
 
     @Test
-    public void test11() {
+    void test11() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(-10000, "2000-05-24"),
@@ -279,5 +279,38 @@ public class XirrTest {
             new Transaction(22421.55, "2017-06-05")
         );
         Assertions.assertEquals(0.2126861, rate, xirr.precision);
+    }
+
+    @Test
+    void test12() {
+        Xirr xirr = Xirr.instance();
+        double rate = xirr.xirr(new Transaction[] {
+                new Transaction(-30371.95, "2023-01-01"),
+                new Transaction(-16178.44, "2023-01-04"),
+                new Transaction(-17084.55, "2023-01-07"),
+                new Transaction(-18587.75, "2023-01-08"),
+                new Transaction(-11424.8, "2023-01-12"),
+                new Transaction(4768.93, "2023-01-20"),
+                new Transaction(2703.96, "2023-01-22"),
+                new Transaction(1811.26, "2023-01-24"),
+                new Transaction(1491.62, "2023-01-28"),
+                new Transaction(4530.28, "2023-01-30"),
+                new Transaction(2996.7, "2023-03-02"),
+                new Transaction(1278.58, "2023-03-05"),
+                new Transaction(4509.64, "2023-03-07"),
+                new Transaction(2197.81, "2023-03-09"),
+                new Transaction(4792.81, "2023-03-11"),
+                new Transaction(4922.18, "2023-04-11"),
+                new Transaction(1461.59, "2023-04-13"),
+                new Transaction(3124.28, "2023-04-18"),
+                new Transaction(4673.55, "2023-04-19"),
+                new Transaction(1903.94, "2023-04-21"),
+                new Transaction(4646.02, "2023-05-10"),
+                new Transaction(4387.87, "2023-05-15"),
+                new Transaction(8253.887192, "2023-05-19")
+            },
+            0.5
+        );
+        Assertions.assertEquals(-0.8049996712, rate, xirr.precision);
     }
 }

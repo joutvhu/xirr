@@ -93,3 +93,5 @@ nb-configuration.xml
 # Secrets
 gradle.properties
 secrets
+
+generate

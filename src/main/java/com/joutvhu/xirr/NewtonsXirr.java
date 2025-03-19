@@ -93,4 +93,20 @@ public class NewtonsXirr {
             throw new XirrException.ValueException("Derivative value is zero");
         return x - r * fr / dfr;
     }
+
+    public double xnpv(double x, int index) {
+        if (index < 0) index = length + index;
+        return xnpv(days[index], x);
+    }
+
+    public double xnpv(long d0, double x) {
+        double fr = 0.0;
+        double r = 1.0 + x;
+        for (int i = 0; i < length; i++) {
+            long d = days[i] - d0;
+            double v = values[i] / pow(r, d);
+            fr += v;
+        }
+        return fr;
+    }
 }
