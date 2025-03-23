@@ -284,32 +284,30 @@ class XirrTest {
     @Test
     void test12() {
         Xirr xirr = Xirr.instance();
-        double rate = xirr.xirr(new Transaction[] {
-                new Transaction(-30371.95, "2023-01-01"),
-                new Transaction(-16178.44, "2023-01-04"),
-                new Transaction(-17084.55, "2023-01-07"),
-                new Transaction(-18587.75, "2023-01-08"),
-                new Transaction(-11424.8, "2023-01-12"),
-                new Transaction(4768.93, "2023-01-20"),
-                new Transaction(2703.96, "2023-01-22"),
-                new Transaction(1811.26, "2023-01-24"),
-                new Transaction(1491.62, "2023-01-28"),
-                new Transaction(4530.28, "2023-01-30"),
-                new Transaction(2996.7, "2023-03-02"),
-                new Transaction(1278.58, "2023-03-05"),
-                new Transaction(4509.64, "2023-03-07"),
-                new Transaction(2197.81, "2023-03-09"),
-                new Transaction(4792.81, "2023-03-11"),
-                new Transaction(4922.18, "2023-04-11"),
-                new Transaction(1461.59, "2023-04-13"),
-                new Transaction(3124.28, "2023-04-18"),
-                new Transaction(4673.55, "2023-04-19"),
-                new Transaction(1903.94, "2023-04-21"),
-                new Transaction(4646.02, "2023-05-10"),
-                new Transaction(4387.87, "2023-05-15"),
-                new Transaction(8253.887192, "2023-05-19")
-            },
-            0.5
+        double rate = xirr.xirr(
+            new Transaction(-30371.95, "2023-01-01"),
+            new Transaction(-16178.44, "2023-01-04"),
+            new Transaction(-17084.55, "2023-01-07"),
+            new Transaction(-18587.75, "2023-01-08"),
+            new Transaction(-11424.8, "2023-01-12"),
+            new Transaction(4768.93, "2023-01-20"),
+            new Transaction(2703.96, "2023-01-22"),
+            new Transaction(1811.26, "2023-01-24"),
+            new Transaction(1491.62, "2023-01-28"),
+            new Transaction(4530.28, "2023-01-30"),
+            new Transaction(2996.7, "2023-03-02"),
+            new Transaction(1278.58, "2023-03-05"),
+            new Transaction(4509.64, "2023-03-07"),
+            new Transaction(2197.81, "2023-03-09"),
+            new Transaction(4792.81, "2023-03-11"),
+            new Transaction(4922.18, "2023-04-11"),
+            new Transaction(1461.59, "2023-04-13"),
+            new Transaction(3124.28, "2023-04-18"),
+            new Transaction(4673.55, "2023-04-19"),
+            new Transaction(1903.94, "2023-04-21"),
+            new Transaction(4646.02, "2023-05-10"),
+            new Transaction(4387.87, "2023-05-15"),
+            new Transaction(8253.887192, "2023-05-19")
         );
         Assertions.assertEquals(-0.8049996712, rate, xirr.precision);
     }

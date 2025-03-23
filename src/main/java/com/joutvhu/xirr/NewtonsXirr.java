@@ -4,10 +4,14 @@ public class NewtonsXirr {
     private static final double DAYS_IN_YEAR = 365.0;
 
     public final int length;
-    private double[] values;
-    private long[] days;
+    public final double[] values;
+    public final long[] days;
+
+    private double _rate;
 
     public NewtonsXirr(Transaction[] transactions) {
+        if (transactions.length < 2)
+            throw new XirrException("Invalid input data");
         this.length = transactions.length;
         this.values = new double[length];
         this.days = new long[length];
@@ -63,6 +67,10 @@ public class NewtonsXirr {
         }
     }
 
+    public boolean isInvalid(double value) {
+        return Double.isNaN(value) || Double.isInfinite(value);
+    }
+
     public double next(double x) {
         return next(days[0], x);
     }
@@ -85,13 +93,18 @@ public class NewtonsXirr {
             fr += v;
             dfr += p * v;
         }
-        if (!Double.isFinite(fr))
-            throw new XirrException.ValueException("Function value overflow");
-        if (!Double.isFinite(dfr))
-            throw new XirrException.ValueException("Derivative value overflow");
+        if (isInvalid(fr))
+            throw new XirrException("Function value overflow");
+        if (isInvalid(dfr))
+            throw new XirrException("Derivative value overflow");
         if (dfr == 0.0)
-            throw new XirrException.ValueException("Derivative value is zero");
+            throw new XirrException("Derivative value is zero");
+        _rate = fr;
         return x - r * fr / dfr;
+    }
+
+    public double rate() {
+        return _rate;
     }
 
     public double xnpv(double x, int index) {
@@ -104,6 +117,8 @@ public class NewtonsXirr {
         double r = 1.0 + x;
         for (int i = 0; i < length; i++) {
             long d = days[i] - d0;
+            if (d == 0.0)
+                throw new XirrException("Duplicate days, d" + i + " - d0 = 0");
             double v = values[i] / pow(r, d);
             fr += v;
         }

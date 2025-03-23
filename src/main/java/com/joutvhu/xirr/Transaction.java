@@ -1,11 +1,14 @@
 package com.joutvhu.xirr;
 
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
+@Getter
 public class Transaction {
     private static final LocalDate DAY0 = LocalDate.of(1900, 1, 1);
 
@@ -27,13 +30,5 @@ public class Transaction {
 
     public Transaction(double amount, String when) {
         this(amount, LocalDate.parse(when));
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public long getWhen() {
-        return when;
     }
 }

@@ -1,29 +1,28 @@
 package com.joutvhu.xirr;
 
-import java.text.MessageFormat;
-
 public class Xirr {
+    private static final double DEFAULT_GUESS = 0.1;
+    private static final double DEFAULT_TRIES = 100;
+    private static final double DEFAULT_PRECISION = 1e-6;
+
     public final double precision;
     public final double tries;
-    public final double validate;
 
-    private Xirr() {
-        precision = 0.000_001;
-        tries = 500;
-        validate = 0.1;
+    protected Xirr() {
+        precision = DEFAULT_PRECISION;
+        tries = DEFAULT_TRIES;
     }
 
-    private Xirr(double precision, double tries) {
+    protected Xirr(double precision, double tries) {
         if (precision <= 0)
             throw new XirrException("The precision must be greater than 0.");
         if (tries <= 0)
             throw new XirrException("The tries must be greater than 0.");
         this.precision = precision;
         this.tries = tries;
-        this.validate = 0.1;
     }
 
-    private Xirr(double precision, double tries, double validate) {
+    protected Xirr(double precision, double tries, double validate) {
         if (precision <= 0)
             throw new XirrException("The precision must be greater than 0.");
         if (tries <= 0)
@@ -32,7 +31,6 @@ public class Xirr {
             throw new XirrException("The validate must be greater than or equal with 0.");
         this.precision = precision;
         this.tries = tries;
-        this.validate = validate;
     }
 
     public static Xirr instance() {
@@ -49,7 +47,12 @@ public class Xirr {
 
     public double xirr(Transaction... transactions) {
         NewtonsXirr newtonsXirr = new NewtonsXirr(transactions);
-        return xirr(newtonsXirr, 0.1);
+        return xirr(newtonsXirr);
+    }
+
+    public double xirr(double guess, Transaction... transactions) {
+        NewtonsXirr newtonsXirr = new NewtonsXirr(transactions);
+        return xirr(newtonsXirr, guess);
     }
 
     public double xirr(Transaction[] transactions, double guess) {
@@ -58,7 +61,8 @@ public class Xirr {
     }
 
     public double xirr(double[] values, long[] days) {
-        return xirr(values, days, 0.1);
+        NewtonsXirr newtonsXirr = new NewtonsXirr(values, days);
+        return xirr(newtonsXirr);
     }
 
     public double xirr(double[] values, long[] days, double guess) {
@@ -66,39 +70,56 @@ public class Xirr {
         return xirr(newtonsXirr, guess);
     }
 
+    public double xirr(NewtonsXirr newtonsXirr) {
+        return xirr(newtonsXirr, DEFAULT_GUESS);
+    }
+
     public double xirr(NewtonsXirr newtonsXirr, double guess) {
-        try {
-            return xirr(newtonsXirr, guess, 0);
-        } catch (XirrException.ValueException e) {
+        if (guess <= -1)
+            throw new XirrException("Invalid guess rate");
+
+        ResultRate result = null;
+        XirrException ex = null;
+        boolean cont = true;
+        for (int i = 0; cont && i < 200; i++) {
             try {
-                return xirr(newtonsXirr, guess, -1);
-            } catch (Exception ex) {
-                throw e.toXirrException();
+                if (i > 0)
+                    guess = -0.99 + (i - 1) * 0.01;
+                result = calculate(newtonsXirr, guess);
+                cont = !result.completed;
+            } catch (XirrException e) {
+                ex = e;
             }
+        }
+
+        if (result != null) {
+            if (!result.completed)
+                throw new XirrException(result.value, result.epsilon, "The result rate {0} are not accurate enough", result.value);
+            return result.value;
+        } else {
+            if (ex != null) throw ex;
+            throw new XirrException("Unable to find result rate");
         }
     }
 
-    public double xirr(NewtonsXirr newtonsXirr, double guess, int d0Index) {
+    private ResultRate calculate(NewtonsXirr newtonsXirr, double guess) {
         double x0 = guess;
         double err = 1e+100;
-
-        for (int i = 0; err > precision; i++) {
-            if (i >= tries) {
-                String message = MessageFormat.format("Not accurate enough after {0} tries, rate: {1}, error: {2}", i, x0, err);
-                throw new XirrException(message, x0, err);
-            }
-            double x1 = newtonsXirr.next(x0, d0Index);
+        boolean comp= false;
+        int i = 0;
+        while (i < tries) {
+            double x1 = newtonsXirr.next(x0);
+            double dif = newtonsXirr.rate();
             err = Math.abs(x1 - x0);
             x0 = x1;
+            comp = (err < precision) || (Math.abs(dif) < precision);
+            if (comp)
+                break;
+            i++;
         }
-
-        if (validate > 0) {
-            double dif = newtonsXirr.xnpv(x0, d0Index);
-            if (Math.abs(dif) > validate) {
-                String message = MessageFormat.format("The result {0} are not accurate enough, Xnpv: {1}", x0, dif);
-                throw new XirrException(message, x0, dif);
-            }
+        if (newtonsXirr.isInvalid(x0)) {
+            comp = false;
         }
-        return x0;
+        return new ResultRate(x0, err, i, comp);
     }
 }
