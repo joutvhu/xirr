@@ -7,7 +7,7 @@ public class NewtonsXirr {
     public final double[] values;
     public final long[] days;
 
-    private double currentRate;
+    private double current;
 
     public NewtonsXirr(Transaction[] transactions) {
         if (transactions.length < 2)
@@ -59,42 +59,43 @@ public class NewtonsXirr {
         return next(days[0], x);
     }
 
-    public double next(double x, int index) {
-        if (index < 0) index = length + index;
-        return next(days[index], x);
-    }
-
     /**
-     *  r   := R+1
-     *  E_i := (D_i-D_0) / 365
+     * Calculate new rate with a guess rate
      *
-     *             n    V_i
-     *  f(R)  = SUM   -------
-     *            i=0  r^E_i
-     *
-     *             n   -E_i * V_i       n   -E_i * V_i     1       n   -E_i * V_i
-     *  f'(R) = SUM   ------------ = SUM   ------------ = --- * SUM   ------------
-     *            i=0  r^(E_i + 1)     i=0  r^E_i * r      r      i=0  r^E_i
-     *
-     *                  n    V_i                 n
-     *               SUM   -------            SUM   V_i * r^(-E_i)
-     *  f(R)           i=0  r^E_i               i=0
-     *  ----- = r * ------------------ = r * ------------------
-     *  f'(R)           n  -E_i * V_i            n
-     *               SUM   -----------        SUM   (-E_i) * V_i * r^(-E_i)
-     *                 i=0  r^E_i               i=0
+     * @param d0 the 0th payment date.
+     * @param x the guess rate
+     * @return the new rate
      */
     public double next(long d0, double x) {
+         //  r   := R+1
+         //  E_i := (D_i-D_0) / 365
+         //
+         //             n    V_i
+         //  f(R)  = SUM   -------
+         //            i=0  r^E_i
+         //
+         //             n   -E_i * V_i       n   -E_i * V_i     1       n   -E_i * V_i
+         //  f'(R) = SUM   ------------ = SUM   ------------ = --- * SUM   ------------
+         //            i=0  r^(E_i + 1)     i=0  r^E_i * r      r      i=0  r^E_i
+         //
+         //                  n    V_i                 n
+         //               SUM   -------            SUM   V_i * r^(-E_i)
+         //  f(R)           i=0  r^E_i               i=0
+         //  ----- = r * ------------------ = r * ------------------
+         //  f'(R)           n  -E_i * V_i            n
+         //               SUM   -----------        SUM   (-E_i) * V_i * r^(-E_i)
+         //                 i=0  r^E_i               i=0
+         //
         double fr = 0.0;
         double dfr = 0.0;
         double r = 1.0 + x;
         if (r == 0)
             return x;
         for (int i = 0; i < length; i++) {
-            double p = (d0 - days[i]) / DAYS_IN_YEAR; // -E_i
-            double v = values[i] * Math.pow(r, p); // V_i * r^(-E_i)
+            double e = (d0 - days[i]) / DAYS_IN_YEAR; // -E_i
+            double v = values[i] * Math.pow(r, e); // V_i * r^(-E_i)
             fr += v;
-            dfr += p * v;
+            dfr += e * v;
         }
         if (isInvalid(fr))
             throw new XirrException("The xirr value is invalid");
@@ -102,11 +103,14 @@ public class NewtonsXirr {
             throw new XirrException("The xirr derivative value is invalid");
         if (dfr == 0.0)
             throw new XirrException("The xirr derivative value is zero");
-        currentRate = fr;
+        current = fr;
         return x - r * fr / dfr;
     }
 
-    public double rate() {
-        return currentRate;
+    /**
+     * @return the amount for the passed interest rate
+     */
+    public double amount() {
+        return current;
     }
 }

@@ -109,7 +109,7 @@ public class Xirr {
         int i = 0;
         while (i < tries) {
             double x1 = newtonsXirr.next(x0);
-            double dif = newtonsXirr.rate();
+            double dif = newtonsXirr.amount();
             err = Math.abs(x1 - x0);
             x0 = x1;
             comp = (err < precision) || (Math.abs(dif) < precision);
