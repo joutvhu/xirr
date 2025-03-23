@@ -281,7 +281,7 @@ class XirrTest {
         Assertions.assertEquals(0.2126861, rate, xirr.precision);
     }
 
-    @Test
+    @Test // ISSUES-2
     void test16() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
