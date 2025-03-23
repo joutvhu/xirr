@@ -24,6 +24,12 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 ext {
     versions = [
     ]
@@ -72,6 +78,10 @@ jar {
             it.replace('pom-default.xml', 'pom.xml')
         }
     }
+}
+
+tasks.withType(JavaCompile) {
+    options.release.set(8)
 }
 
 task fatJar(type: Jar) {
@@ -183,8 +193,8 @@ publishing {
                 url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
             }
             credentials {
-                username = project.ossrhUsername
-                password = project.ossrhPassword
+                username = project.ossrhToken
+                password = project.ossrhTokenPassword
             }
         }
         maven {
