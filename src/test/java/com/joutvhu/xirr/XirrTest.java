@@ -119,7 +119,7 @@ class XirrTest {
     }
 
     @Test
-    void test03_0() {
+    void test04() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -133,7 +133,7 @@ class XirrTest {
     }
 
     @Test
-    void test03_1() {
+    void test05() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -146,7 +146,7 @@ class XirrTest {
     }
 
     @Test
-    void test03_2() {
+    void test06() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(317505.63, "2018-10-02"),
@@ -159,7 +159,7 @@ class XirrTest {
     }
 
     @Test
-    void test03_3() {
+    void test07() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(new Transaction[]{
                 new Transaction(-6565763.49, "2018-10-02"),
@@ -171,7 +171,7 @@ class XirrTest {
     }
 
     @Test
-    void test04() {
+    void test08() {
         // computes the xirr on 1 year growth of 0%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -182,7 +182,7 @@ class XirrTest {
     }
 
     @Test
-    void test05() {
+    void test09() {
         // computes the xirr on 1 year growth of 10%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -193,7 +193,7 @@ class XirrTest {
     }
 
     @Test
-    void test06() {
+    void test10() {
         // computes the negative xirr on 1 year decline of 10%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -204,7 +204,7 @@ class XirrTest {
     }
 
     @Test
-    void test07() {
+    void test11() {
         // computes the xirr on a particular data set the same as a popular
         // spreadsheet
         Xirr xirr = Xirr.instance();
@@ -219,7 +219,7 @@ class XirrTest {
     }
 
     @Test
-    void test08() {
+    void test12() {
         // gets the same answer even if the transations are out of order
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -233,7 +233,7 @@ class XirrTest {
     }
 
     @Test
-    void test09() {
+    void test13() {
         // computes rates of return greater than 100%
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
@@ -244,7 +244,7 @@ class XirrTest {
     }
 
     @Test
-    void test10() {
+    void test14() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(-1000, "2016-01-15"),
@@ -256,7 +256,7 @@ class XirrTest {
     }
 
     @Test
-    void test11() {
+    void test15() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(-10000, "2000-05-24"),
@@ -282,7 +282,7 @@ class XirrTest {
     }
 
     @Test
-    void test12() {
+    void test16() {
         Xirr xirr = Xirr.instance();
         double rate = xirr.xirr(
             new Transaction(-30371.95, "2023-01-01"),

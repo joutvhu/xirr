@@ -24,11 +24,6 @@ repositories {
     mavenCentral()
 }
 
-java {
-    sourceCompatibility = 21
-    targetCompatibility = 1.8
-}
-
 ext {
     versions = [
     ]

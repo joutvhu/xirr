@@ -7,7 +7,7 @@ public class NewtonsXirr {
     public final double[] values;
     public final long[] days;
 
-    private double _rate;
+    private double currentRate;
 
     public NewtonsXirr(Transaction[] transactions) {
         if (transactions.length < 2)
@@ -51,22 +51,6 @@ public class NewtonsXirr {
             throw new XirrException("Expects at least one negative cash flow.");
     }
 
-    private double pow(double value, long days) {
-        if (value == 0) {
-            return 0;
-        } else if (days == 0) {
-            return 1;
-        } else if (value < 0) {
-            // Ex: (-5)^(50/365) = (-1)^(50/365) * (5)^(50/365)
-            //                   = ((-1)^(1/365))^(50) * (5)^(50/365)
-            //                   = (-1)^(50) * (5)^(50/365)
-            double v = Math.pow(Math.abs(value), days / DAYS_IN_YEAR);
-            return Math.abs(days) % 2 == 0 ? v : -1 * v;
-        } else {
-            return Math.pow(value, days / DAYS_IN_YEAR);
-        }
-    }
-
     public boolean isInvalid(double value) {
         return Double.isNaN(value) || Double.isInfinite(value);
     }
@@ -80,6 +64,26 @@ public class NewtonsXirr {
         return next(days[index], x);
     }
 
+    /**
+     *  r   := R+1
+     *  E_i := (D_i-D_0) / 365
+     *
+     *             n    V_i
+     *  f(R)  = SUM   -------
+     *            i=0  r^E_i
+     *
+     *             n   -E_i * V_i       n   -E_i * V_i     1       n   -E_i * V_i
+     *  f'(R) = SUM   ------------ = SUM   ------------ = --- * SUM   ------------
+     *            i=0  r^(E_i + 1)     i=0  r^E_i * r      r      i=0  r^E_i
+     *
+     *                  n    V_i                 n
+     *               SUM   -------            SUM   V_i * r^(-E_i)
+     *  f(R)           i=0  r^E_i               i=0
+     *  ----- = r * ------------------ = r * ------------------
+     *  f'(R)           n  -E_i * V_i            n
+     *               SUM   -----------        SUM   (-E_i) * V_i * r^(-E_i)
+     *                 i=0  r^E_i               i=0
+     */
     public double next(long d0, double x) {
         double fr = 0.0;
         double dfr = 0.0;
@@ -87,41 +91,22 @@ public class NewtonsXirr {
         if (r == 0)
             return x;
         for (int i = 0; i < length; i++) {
-            long d = d0 - days[i];
-            double p = d / DAYS_IN_YEAR;
-            double v = values[i] * pow(r, d);
+            double p = (d0 - days[i]) / DAYS_IN_YEAR; // -E_i
+            double v = values[i] * Math.pow(r, p); // V_i * r^(-E_i)
             fr += v;
             dfr += p * v;
         }
         if (isInvalid(fr))
-            throw new XirrException("Function value overflow");
+            throw new XirrException("The xirr value is invalid");
         if (isInvalid(dfr))
-            throw new XirrException("Derivative value overflow");
+            throw new XirrException("The xirr derivative value is invalid");
         if (dfr == 0.0)
-            throw new XirrException("Derivative value is zero");
-        _rate = fr;
+            throw new XirrException("The xirr derivative value is zero");
+        currentRate = fr;
         return x - r * fr / dfr;
     }
 
     public double rate() {
-        return _rate;
-    }
-
-    public double xnpv(double x, int index) {
-        if (index < 0) index = length + index;
-        return xnpv(days[index], x);
-    }
-
-    public double xnpv(long d0, double x) {
-        double fr = 0.0;
-        double r = 1.0 + x;
-        for (int i = 0; i < length; i++) {
-            long d = days[i] - d0;
-            if (d == 0.0)
-                throw new XirrException("Duplicate days, d" + i + " - d0 = 0");
-            double v = values[i] / pow(r, d);
-            fr += v;
-        }
-        return fr;
+        return currentRate;
     }
 }

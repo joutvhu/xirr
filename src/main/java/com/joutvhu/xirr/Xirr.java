@@ -74,6 +74,7 @@ public class Xirr {
         return xirr(newtonsXirr, DEFAULT_GUESS);
     }
 
+    @SuppressWarnings("java:S2259")
     public double xirr(NewtonsXirr newtonsXirr, double guess) {
         if (guess <= -1)
             throw new XirrException("Invalid guess rate");
@@ -97,15 +98,14 @@ public class Xirr {
                 throw new XirrException(result.value, result.epsilon, "The result rate {0} are not accurate enough", result.value);
             return result.value;
         } else {
-            if (ex != null) throw ex;
-            throw new XirrException("Unable to find result rate");
+            throw ex;
         }
     }
 
     private ResultRate calculate(NewtonsXirr newtonsXirr, double guess) {
         double x0 = guess;
         double err = 1e+100;
-        boolean comp= false;
+        boolean comp = false;
         int i = 0;
         while (i < tries) {
             double x1 = newtonsXirr.next(x0);
@@ -118,7 +118,7 @@ public class Xirr {
             i++;
         }
         if (newtonsXirr.isInvalid(x0)) {
-            comp = false;
+            throw new XirrException("Unable to find result rate");
         }
         return new ResultRate(x0, err, i, comp);
     }
