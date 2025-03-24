@@ -135,7 +135,7 @@ public class NewtonsXirr {
         //                  n    V_i                 n
         //               SUM   -------            SUM   V_i * r^(-E_i)
         //  f(R)           i=0  r^E_i               i=0
-        //  ----- = r * ------------------ = r * ------------------
+        //  ----- = r * ------------------ = r * -------------------------------
         //  f'(R)           n  -E_i * V_i            n
         //               SUM   -----------        SUM   (-E_i) * V_i * r^(-E_i)
         //                 i=0  r^E_i               i=0
@@ -150,10 +150,6 @@ public class NewtonsXirr {
             fr += v;
             dfr += e * v;
         }
-        if (isInvalid(fr))
-            throw new XirrException("The xirr value is invalid");
-        if (isInvalid(dfr))
-            throw new XirrException("The xirr derivative value is invalid");
         if (dfr == 0.0)
             throw new XirrException("The xirr derivative value is zero");
         current = fr;
@@ -167,5 +163,20 @@ public class NewtonsXirr {
      */
     public double amount() {
         return current;
+    }
+
+    public double xnpv(double x) {
+        return xnpv(days[0], x);
+    }
+
+    public double xnpv(long d0, double x) {
+        double fr = 0.0;
+        double r = 1.0 + x;
+        for (int i = 0; i < length; i++) {
+            double e = (days[i] - d0) / DAYS_IN_YEAR;
+            double v = values[i] / Math.pow(r, e);
+            fr += v;
+        }
+        return fr;
     }
 }

@@ -178,7 +178,9 @@ public class Xirr {
                 throw new XirrException(result.value, result.epsilon, "The result rate {0} are not accurate enough", result.value);
             return result.value;
         } else {
-            throw ex;
+            if (ex != null)
+                throw ex;
+            throw new XirrException("Unable to find result rate");
         }
     }
 
@@ -207,5 +209,19 @@ public class Xirr {
             throw new XirrException("Unable to find result rate");
         }
         return new ResultRate(x0, err, comp);
+    }
+
+    public double xnpv(double guess, Transaction... transactions) {
+        NewtonsXirr newtonsXirr = new NewtonsXirr(transactions);
+        return xnpv(guess, newtonsXirr);
+    }
+
+    public double xnpv(double guess, double[] values, long[] days) {
+        NewtonsXirr newtonsXirr = new NewtonsXirr(values, days);
+        return xnpv(guess, newtonsXirr);
+    }
+
+    public double xnpv(double guess, NewtonsXirr newtonsXirr) {
+        return newtonsXirr.xnpv(guess);
     }
 }
