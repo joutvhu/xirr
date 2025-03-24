@@ -628,7 +628,7 @@ class XirrGenerated01Test {
             new Transaction(-1660072.35, "2017-06-20"),
             new Transaction(-2134287.23, "2017-06-23")
         );
-        Assertions.assertEquals(-0.8314068499, rate, xirr.precision);
+        Assertions.assertEquals(-0.5883152480421853, rate, xirr.precision);
     }
 
     @Test
@@ -5357,7 +5357,7 @@ class XirrGenerated01Test {
             new Transaction(9501317.39, "2014-08-22"),
             new Transaction(-3016552.50, "2015-01-06")
         );
-        Assertions.assertEquals(-0.9795678422, rate, xirr.precision);
+        Assertions.assertEquals(-0.17734727555496405, rate, xirr.precision);
     }
 
     @Test

@@ -154,27 +154,29 @@ public class Xirr {
      * @return the calculated XIRR.
      * @throws XirrException if the guess is invalid or the result is not accurate enough.
      */
-    @SuppressWarnings("java:S2259")
     public double xirr(NewtonsXirr newtonsXirr, double guess) {
         if (guess <= -1)
             throw new XirrException("Invalid guess rate");
 
-        ResultRate result = null;
+        XirrRate result = null;
         XirrException ex = null;
-        boolean cont = true;
-        for (int i = 0; cont && i < 200; i++) {
+        for (int i = 0; i < 200; i++) {
             try {
                 if (i > 0)
                     guess = -0.99 + (i - 1) * 0.01;
-                result = calculate(newtonsXirr, guess);
-                cont = !result.completed;
+                XirrRate newResult = calculate(newtonsXirr, guess);
+                if (newResult.epsilon < precision) {
+                    result = newResult;
+                    break;
+                }
+                result = XirrRate.select(result, newResult);
             } catch (XirrException e) {
                 ex = e;
             }
         }
 
         if (result != null) {
-            if (!result.completed)
+            if (!result.acceptable)
                 throw new XirrException(result.value, result.epsilon, "The result rate {0} are not accurate enough", result.value);
             return result.value;
         } else {
@@ -192,23 +194,26 @@ public class Xirr {
      * @return the result rate.
      * @throws XirrException if unable to find a valid result rate.
      */
-    private ResultRate calculate(NewtonsXirr newtonsXirr, double guess) {
+    private XirrRate calculate(NewtonsXirr newtonsXirr, double guess) {
         double x0 = guess;
-        double err = 1e+100;
-        boolean comp = false;
+        XirrRate result = new XirrRate(x0, 1e+100);
         for (int i = 0; i < tries; i++) {
             double x1 = newtonsXirr.next(x0);
-            double dif = newtonsXirr.amount();
-            err = Math.abs(x1 - x0);
+            double edf = Math.abs(newtonsXirr.amount());
+            double erx = Math.abs(x1 - x0);
+            double err = Math.max(erx, edf);
             x0 = x1;
-            comp = (err < precision) || (Math.abs(dif) < precision);
-            if (comp)
+            if (err < precision) {
+                result.set(x0, err);
                 break;
+            } else if ((erx < precision) || (edf < precision)) {
+                result.update(x0, err);
+            }
         }
-        if (newtonsXirr.isInvalid(x0)) {
-            throw new XirrException("Unable to find result rate");
+        if (Double.isNaN(x0) || Double.isInfinite(x0)) {
+            throw new XirrException("Unable to find result rate, invalid result");
         }
-        return new ResultRate(x0, err, comp);
+        return result;
     }
 
     public double xnpv(double guess, Transaction... transactions) {

@@ -93,16 +93,6 @@ public class NewtonsXirr {
     }
 
     /**
-     * Checks if the provided value is invalid (NaN or Infinite).
-     *
-     * @param value the value to check.
-     * @return true if the value is invalid, false otherwise.
-     */
-    public boolean isInvalid(double value) {
-        return Double.isNaN(value) || Double.isInfinite(value);
-    }
-
-    /**
      * Calculates the next rate using the Newton-Raphson method with the provided guess rate.
      *
      * @param x the guess rate.
@@ -150,6 +140,10 @@ public class NewtonsXirr {
             fr += v;
             dfr += e * v;
         }
+        if (Double.isNaN(fr))
+            throw new XirrException("The xirr value is invalid");
+        if (Double.isNaN(dfr))
+            throw new XirrException("The xirr derivative value is invalid");
         if (dfr == 0.0)
             throw new XirrException("The xirr derivative value is zero");
         current = fr;
