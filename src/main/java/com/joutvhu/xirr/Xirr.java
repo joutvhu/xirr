@@ -199,15 +199,15 @@ public class Xirr {
         XirrRate result = new XirrRate(x0, 1e+100);
         for (int i = 0; i < tries; i++) {
             double x1 = newtonsXirr.next(x0);
-            double edf = Math.abs(newtonsXirr.amount());
+            double enp = Math.abs(newtonsXirr.amount());
             double erx = Math.abs(x1 - x0);
-            double err = Math.max(erx, edf);
+            double err = Math.max(erx, enp);
             x0 = x1;
             if (err < precision) {
-                result.set(x0, err);
+                result.set(x0, enp, err);
                 break;
-            } else if ((erx < precision) || (edf < precision)) {
-                result.update(x0, err);
+            } else if ((erx < precision) || (enp < precision)) {
+                result.update(x0, enp, err);
             }
         }
         if (Double.isNaN(x0) || Double.isInfinite(x0)) {
@@ -216,16 +216,38 @@ public class Xirr {
         return result;
     }
 
+    /**
+     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     *
+     * @param guess        the discount rate to apply to the cash flows.
+     * @param transactions array of transactions.
+     * @return the net present value.
+     */
     public double xnpv(double guess, Transaction... transactions) {
         NewtonsXirr newtonsXirr = new NewtonsXirr(transactions);
         return xnpv(guess, newtonsXirr);
     }
 
+    /**
+     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     *
+     * @param guess  the discount rate to apply to the cash flows.
+     * @param values array of values.
+     * @param days   array of days.
+     * @return the net present value.
+     */
     public double xnpv(double guess, double[] values, long[] days) {
         NewtonsXirr newtonsXirr = new NewtonsXirr(values, days);
         return xnpv(guess, newtonsXirr);
     }
 
+    /**
+     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     *
+     * @param guess       the discount rate to apply to the cash flows.
+     * @param newtonsXirr the Newton's XIRR instance.
+     * @return the net present value.
+     */
     public double xnpv(double guess, NewtonsXirr newtonsXirr) {
         return newtonsXirr.xnpv(guess);
     }

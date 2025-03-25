@@ -159,10 +159,23 @@ public class NewtonsXirr {
         return current;
     }
 
+    /**
+     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     *
+     * @param x the discount rate to apply to the cash flows.
+     * @return the net present value.
+     */
     public double xnpv(double x) {
         return xnpv(days[0], x);
     }
 
+    /**
+     * Returns the net present value for a schedule of cash flows that is not necessarily periodic.
+     *
+     * @param d0 the 0th payment date.
+     * @param x  the discount rate to apply to the cash flows.
+     * @return the net present value.
+     */
     public double xnpv(long d0, double x) {
         double fr = 0.0;
         double r = 1.0 + x;
