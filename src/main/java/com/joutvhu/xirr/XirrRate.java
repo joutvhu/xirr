@@ -29,11 +29,8 @@ class XirrRate {
     }
 
     void update(double value, double epsilon) {
-        if (!acceptable || epsilon < this.epsilon) {
-            this.value = value;
-            this.epsilon = epsilon;
-            this.acceptable = true;
-        }
+        if (!acceptable || epsilon < this.epsilon)
+            this.set(value, epsilon);
     }
 
     static XirrRate select(XirrRate oldRate, XirrRate newRate) {

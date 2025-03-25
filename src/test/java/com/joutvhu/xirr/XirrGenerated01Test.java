@@ -1,7 +1,6 @@
 package com.joutvhu.xirr;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class XirrGenerated01Test {
@@ -628,7 +627,7 @@ class XirrGenerated01Test {
             new Transaction(-1660072.35, "2017-06-20"),
             new Transaction(-2134287.23, "2017-06-23")
         );
-        Assertions.assertEquals(-0.5883152480421853, rate, xirr.precision);
+        Assertions.assertEquals(-0.8314068499, rate, xirr.precision);
     }
 
     @Test

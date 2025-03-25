@@ -122,23 +122,23 @@ public class NewtonsXirr {
         //  f'(R) = SUM   ------------ = SUM   ------------ = --- * SUM   ------------
         //            i=0  r^(E_i + 1)     i=0  r^E_i * r      r      i=0  r^E_i
         //
-        //                  n    V_i                 n
-        //               SUM   -------            SUM   V_i * r^(-E_i)
-        //  f(R)           i=0  r^E_i               i=0
-        //  ----- = r * ------------------ = r * -------------------------------
-        //  f'(R)           n  -E_i * V_i            n
-        //               SUM   -----------        SUM   (-E_i) * V_i * r^(-E_i)
-        //                 i=0  r^E_i               i=0
+        //                  n    V_i
+        //               SUM   -------
+        //  f(R)           i=0  r^E_i
+        //  ----- = r * ------------------
+        //  f'(R)           n  -E_i * V_i
+        //               SUM   -----------
+        //                 i=0  r^E_i
         double fr = 0.0;
         double dfr = 0.0;
         double r = 1.0 + x;
         if (r == 0)
             return x;
         for (int i = 0; i < length; i++) {
-            double e = (d0 - days[i]) / DAYS_IN_YEAR; // -E_i
-            double v = values[i] * Math.pow(r, e); // V_i * r^(-E_i)
+            double e = (days[i] - d0) / DAYS_IN_YEAR; // E_i
+            double v = values[i] / Math.pow(r, e);    // V_i / r^(E_i)
             fr += v;
-            dfr += e * v;
+            dfr += -e * v;
         }
         if (Double.isNaN(fr))
             throw new XirrException("The xirr value is invalid");
