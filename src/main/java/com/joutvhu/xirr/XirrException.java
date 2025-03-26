@@ -54,4 +54,16 @@ public class XirrException extends RuntimeException {
     public XirrException(String message) {
         this(null, null, message);
     }
+
+    /**
+     * Constructor to create an XirrException with a message and cause.
+     *
+     * @param message the detail message.
+     * @param cause   the cause.
+     */
+    public XirrException(String message, Throwable cause) {
+        super(message, cause);
+        this.accurate = null;
+        this.value = null;
+    }
 }

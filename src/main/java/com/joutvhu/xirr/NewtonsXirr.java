@@ -141,11 +141,15 @@ public class NewtonsXirr {
             dfr += -e * v;
         }
         if (Double.isNaN(fr))
-            throw new XirrException("The xirr value is invalid");
+            throw new XirrException(null, null, "The net present value is invalid when rate is {0}", x);
+        if (Double.isInfinite(fr))
+            throw new XirrException(null, null, "The net present value is infinity when rate is {0}", x);
         if (Double.isNaN(dfr))
-            throw new XirrException("The xirr derivative value is invalid");
+            throw new XirrException(null, null, "The derivative value of net present is invalid when rate is {0}", x);
+        if (Double.isInfinite(dfr))
+            throw new XirrException(null, null, "The derivative value of net present is infinity when rate is {0}", x);
         if (dfr == 0.0)
-            throw new XirrException("The xirr derivative value is zero");
+            throw new XirrException(null, null, "The derivative value of net present is zero when rate is {0}", x);
         current = fr;
         return x - r * fr / dfr;
     }

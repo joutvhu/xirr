@@ -180,9 +180,7 @@ public class Xirr {
                 throw new XirrException(result.value, result.epsilon, "The result rate {0} are not accurate enough", result.value);
             return result.value;
         } else {
-            if (ex != null)
-                throw ex;
-            throw new XirrException("Unable to find result rate");
+            throw new XirrException("Unable to find result rate", ex);
         }
     }
 
