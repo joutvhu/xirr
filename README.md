@@ -65,3 +65,19 @@ double rate = Xirr.instance().xirr(
         new Transaction(2750,"2009-04-01")
 );
 ```
+
+## Accuracy of Result
+
+The `xirr` is closely related to `xnpv`, the net present value function. The rate of return calculated by `xirr` is the interest rate corresponding to `xnpv = 0`.
+
+The library provides the `xnpv` functions so you can double-check the accuracy of the results if you want.
+
+- `Xirr.xnpv(double rate, Transaction[] transactions)`
+
+- `Xirr.xnpv(double rate, double[] values, long[] days)`
+
+With:
+
+- `rate`         __required__. is result from the `xirr` function, which is the discount rate to apply to the cash flows.
+
+**The closer the result of the `xnpv` function is to zero, the more accurate the calculated rate value.**
